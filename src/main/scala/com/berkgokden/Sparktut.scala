@@ -60,8 +60,16 @@ object Sparktut extends App{
   println(s"Root-mean-square error = $rmse")
 
   // $example off$
-  predictions.take(3).foreach(println)
+  // predictions.take(3).foreach(c => println(c.getAs[Int]("userId") + ":" + c.getAs[Float]("rating") + ":" + c.getAs[Float]("prediction")))
+  val result = predictions.filter(c => c.getAs[Int]("userId") == 1).sort($"prediction".desc)
+    .map(c => c.getAs[Int]("userId") + ":" + c.getAs[Int]("movieId") + ":"+ c.getAs[Float]("rating") + ":" + c.getAs[Float]("prediction"))
+    .collect()
+
 
   spark.stop()
+
+  result.foreach(s => println(s))
+  println(s"Root-mean-square error = $rmse")
+
 }
 // scalastyle:on println
